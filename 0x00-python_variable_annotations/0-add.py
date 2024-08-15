@@ -1,6 +1,6 @@
-#!/usr/bin/python3
-''' This file houses a function that takes two floats as
-  argument and returns the sum as a float too'''
+#!/usr/bin/env python3
+'''This file houses a function that takes two floats as
+    argument and returns the sum as a float too'''
 
 
 def add(a: float, b: float) -> float:
