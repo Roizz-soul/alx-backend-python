@@ -47,7 +47,6 @@ class TestGetJson(unittest.TestCase):
 
             req.assert_called_once_with(a)
             self.assertEqual(result, b)
-        
 
 
 class TestMemoize(unittest.TestCase):
@@ -67,7 +66,7 @@ class TestMemoize(unittest.TestCase):
             myClass = TestClass()
             res1 = myClass.a_property
             res2 = myClass.a_property
-            
+
             meth.assert_called_once()
 
             self.assertEqual(res1, 42)
