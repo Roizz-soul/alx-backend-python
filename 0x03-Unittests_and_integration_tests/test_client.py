@@ -35,3 +35,22 @@ class TestGithubOrgClient(unittest.TestCase):
                 res._public_repos_url,
                 "https://api.github.com/orgs/repos_url/repos"
             )
+
+    @patch("client.get_json")
+    def test_public_repos(self, mock_get: Mock):
+        """ Function to test public repos """
+        payload = [{"name": "www"}]
+        mock_get.return_value = payload
+        with patch(
+            "client.GithubOrgClient._public_repos_url",
+            new_callable=PropertyMock
+        ) as mick:
+            mick.return_value = "www"
+            res = GithubOrgClient("www")
+            self.assertEqual(res.public_repos(None), ["www"])
+            mock_get.assert_called_once()
+            mick.assert_called_once()
+
+
+if __name__ == '__main__':
+    unittest.main()
