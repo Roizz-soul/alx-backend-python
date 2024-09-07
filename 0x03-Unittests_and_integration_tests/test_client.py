@@ -67,8 +67,8 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     """ Class for integrated testing """
 
     @classmethod
-    def setUpClass(cls):
-        """ Setup Function """
+    def setUpClass(cls) -> None:
+        """ Setup class Function """
         route_payload = {
             'https://api.github.com/orgs/google': cls.a,
             'https://api.github.com/orgs/google/repos': cls.b,
@@ -83,18 +83,18 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         cls.get_patcher = patch("requests.get", side_effect=get_payload)
         cls.get_patcher.start()
 
-    def test_public_repos(self):
+    def test_public_repos(self) -> None:
         """ Test public repo"""
         res = GithubOrgClient("google")
         self.assertEqual(res.public_repos(), self.c)
 
-    def test_public_repos_with_license(self):
+    def test_public_repos_with_license(self) -> None:
         """Test public repos with license"""
         res = GithubOrgClient("google")
         self.assertEqual(res.public_repos(license="apache-2.0"), self.d)
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDownClass(cls) -> None:
         """ TearDown Function """
         cls.get_patcher.stop()
 
