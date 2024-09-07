@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """ Test module for utils """
 from client import GithubOrgClient
-from parameterized import parameterized
+from fixtures import TEST_PAYLOAD
+from parameterized import parameterized, parameterized_class
 from typing import Mapping, Sequence, Dict
 from utils import access_nested_map, get_json, memoize
 from unittest.mock import Mock, patch, PropertyMock
@@ -59,6 +60,42 @@ class TestGithubOrgClient(unittest.TestCase):
         """ Function to test has_license """
         res = GithubOrgClient("www")
         self.assertEqual(res.has_license(a, b), c)
+
+
+@parameterized_class(("a", "b", "c", "d"), TEST_PAYLOAD)
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """ Class for integrated testing """
+
+    @classmethod
+    def setUpClass(cls):
+        """ Setup Function """
+        route_payload = {
+            'https://api.github.com/orgs/google': cls.a,
+            'https://api.github.com/orgs/google/repos': cls.b,
+        }
+
+        def get_payload(url):
+            if url in route_payload:
+                return Mock(**{'json.return_value': route_payload[url]})
+            return HTTPError
+
+        cls.get_patcher = patch("requests.get", side_effect=get_payload)
+        cls.get_patcher.start()
+
+    def test_public_repos(self):
+        """ Test public repo"""
+        res = GithubOrgClient("google")
+        self.assertEqual(res.public_repos(), self.c)
+
+    def test_public_repos_with_license(self):
+        """Test public repos with license"""
+        res = GithubOrgClient("google")
+        self.assertEqual(res.public_repos(license="apache-2.0"), self.d)
+
+    @classmethod
+    def tearDownClass(cls):
+        """ TearDown Function """
+        cls.get_patcher.stop()
 
 
 if __name__ == '__main__':
