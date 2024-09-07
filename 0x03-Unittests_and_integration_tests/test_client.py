@@ -74,7 +74,8 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
             'https://api.github.com/orgs/google/repos': cls.b,
         }
 
-        def get_payload(url):
+        def get_payload(url: str):
+            """ Payload side effect """
             if url in route_payload:
                 return Mock(**{'json.return_value': route_payload[url]})
             return HTTPError
