@@ -51,6 +51,15 @@ class TestGithubOrgClient(unittest.TestCase):
             mock_get.assert_called_once()
             mick.assert_called_once()
 
+    @parameterized.expand([
+        ({"license": {"key": "my_license"}}, "my_license", True),
+        ({"license": {"key": "other_license"}}, "my_license", False)
+    ])
+    def test_has_license(self, a: Dict[str, Dict], b: str, c: bool):
+        """ Function to test has_license """
+        res = GithubOrgClient("www")
+        self.assertEqual(res.has_license(a, b), c)
+
 
 if __name__ == '__main__':
     unittest.main()
